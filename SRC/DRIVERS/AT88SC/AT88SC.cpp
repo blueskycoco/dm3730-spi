@@ -164,7 +164,8 @@ DWORD ATS_Init(DWORD dwContext)
 		}		
 	at88.addr=0;	
 	at88.size=128;	
-	ReadReg(&at88);		
+	if(ReadReg(&at88))
+	{	
 	RETAILMSG(1,(TEXT("\r\nRead user zone data again:\r\n")));
 	for(i=0;i<at88.size;i++)	
 		{		
@@ -172,6 +173,9 @@ DWORD ATS_Init(DWORD dwContext)
 			RETAILMSG(1,(TEXT("\r\n")));		
 		RETAILMSG(1,(TEXT("%4X "),at88.data[i])); 		
 		}
+	}
+	else
+	RETAILMSG(1,(TEXT("read at88sc user zone failed\r\n")));
 	free(at88.data);
 	RETAILMSG(1,(TEXT("[	AT88SC --]\r\n")));
 	return TRUE;
@@ -205,7 +209,8 @@ BOOL WriteReg(at88* value)
 			
 		//memcpy(param.user_zone,value->data+index,param.len);
 		param.user_zone=value->data+index;
-		userzone_proc(&param,0);
+		if(!userzone_proc(&param,0))
+			return FALSE;
 		local_size=local_size-param.len;		
 		local_addr=local_addr+param.len;
 		index=index+param.len;
@@ -241,7 +246,8 @@ BOOL ReadReg(at88* value)
 		/*rt_kprintf("user_zone %x\r\ng %x %x %x %x %x %x %x %x\r\npw %x %x %x\r\npage_size %x\r\nzone_index %x\r\n",
 			param.user_zone,param.g[0],param.g[1],param.g[2],param.g[3],param.g[4],param.g[5],param.g[6],param.g[7],
 			param.pw[0],param.pw[1],param.pw[2],param.page_size,param.zone_index);*/
-		userzone_proc(&param,1);
+		if(!userzone_proc(&param,1))
+			return FALSE;
 		local_size=local_size-param.len;		
 		local_addr=local_addr+param.len;
 		index=index+param.len;
