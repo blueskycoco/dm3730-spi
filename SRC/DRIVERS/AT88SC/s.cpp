@@ -876,7 +876,7 @@ BOOL get_config(unsigned char *buf)
 {
 	BOOL ucReturn;	
 	unsigned char ucData[240];
-	unsigned char Def_SecureCode[3] = {0xdd,0x42,0x97};
+	unsigned char Def_SecureCode[3] = {0xcc,0x33,0xff};
 	int i;
 	unsigned char fuse;	
 	cm_PowerOn();

@@ -154,14 +154,16 @@ DWORD ATS_Init(DWORD dwContext)
 	memset(at88.data,123,128);	
 	for(i=0;i<128;i++)		
 		at88.data[i]=i;	
-	for(i=0;i<3;i++)	
+	/*for(i=0;i<3;i++)	
 		{		
 		at88.pw[i]=i;	
 		}	
 	for(i=0;i<8;i++)	
 		{		
 		at88.g[i]=i;	
-		}		
+		}*/
+	at88.pw[0]=0x04;at88.pw[1]=0x0b;at88.pw[2]=0x0a;
+	at88.g[0]=0x0e;at88.g[1]=0x04;at88.g[2]=0x0f;at88.g[3]=0x07;at88.g[4]=0x03;at88.g[5]=0x0f;at88.g[6]=0x0c;at88.g[7]=0x02;
 	at88.addr=0;	
 	at88.size=128;	
 	if(ReadReg(&at88))
