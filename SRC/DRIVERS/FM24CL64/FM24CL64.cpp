@@ -20,6 +20,7 @@ BOOL Virtual_Alloc()
 	I2CSetSlaveAddress(m_hI2C,  FM24CL64_I2C_DEVICE_ADDR); //nmcca: there is nothing to check to see if the handle is null...
 	I2CSetSubAddressMode(m_hI2C, I2C_SUBADDRESS_MODE_0);  
 #else
+	DWORD  config;
 	hGpio = GPIOOpen();
 	GPIOSetMode(hGpio, 162, GPIO_DIR_OUTPUT );
 	GPIOSetMode(hGpio, 158, GPIO_DIR_OUTPUT );
@@ -131,7 +132,6 @@ BOOL ReadReg(UINT8* data,UINT8 size)
 		Local_buffer[0]=0x3;
 		Local_buffer[1]=(g_save_addr)&0xff;
 		Local_buffer[2]=(g_save_addr>>8)&0xff;
-		memcpy(&(Local_buffer[3]),value,size);
 		SPIWriteRead(hSPI, sizeof(UINT8)*(size+3), Local_buffer,Local_buffer);
 		memcpy(data,&(Local_buffer[3]),size);
 		free(Local_buffer);
