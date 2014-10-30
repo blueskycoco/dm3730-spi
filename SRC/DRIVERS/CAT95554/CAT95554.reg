@@ -1,0 +1,6 @@
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\TAC]
+    "Dll" = "CAT95554.dll"
+    "Index" = dword:1
+    "Prefix" = "TAC"
+    "Order" = dword:13
+    "FriendlyName" = "CAT95554 Control"

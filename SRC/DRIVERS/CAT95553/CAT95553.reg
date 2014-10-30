@@ -1,0 +1,6 @@
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\ACT]
+    "Dll" = "CAT95553.dll"
+    "Index" = dword:1
+    "Prefix" = "ACT"
+    "Order" = dword:12
+    "FriendlyName" = "CAT95553 Control"

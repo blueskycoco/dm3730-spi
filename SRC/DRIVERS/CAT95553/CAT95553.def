@@ -1,0 +1,15 @@
+;
+; Windows CE CAT9555
+
+LIBRARY CAT95553
+EXPORTS
+	ACT_Close
+	ACT_Deinit
+	ACT_Init
+	ACT_IOControl
+	ACT_Open
+	ACT_PowerDown
+	ACT_PowerUp
+	ACT_Read
+	ACT_Seek
+	ACT_Write

@@ -1,0 +1,6 @@
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\CAT]
+    "Dll" = "CAT9555.dll"
+    "Index" = dword:1
+    "Prefix" = "CAT"
+    "Order" = dword:10
+    "FriendlyName" = "CAT9555 Control"

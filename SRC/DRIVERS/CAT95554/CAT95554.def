@@ -1,0 +1,15 @@
+;
+; Windows CE CAT9555
+
+LIBRARY CAT95554
+EXPORTS
+	TAC_Close
+	TAC_Deinit
+	TAC_Init
+	TAC_IOControl
+	TAC_Open
+	TAC_PowerDown
+	TAC_PowerUp
+	TAC_Read
+	TAC_Seek
+	TAC_Write

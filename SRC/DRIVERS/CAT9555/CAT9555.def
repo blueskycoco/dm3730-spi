@@ -1,0 +1,15 @@
+;
+; Windows CE CAT9555
+
+LIBRARY CAT9555
+EXPORTS
+	CAT_Close
+	CAT_Deinit
+	CAT_Init
+	CAT_IOControl
+	CAT_Open
+	CAT_PowerDown
+	CAT_PowerUp
+	CAT_Read
+	CAT_Seek
+	CAT_Write

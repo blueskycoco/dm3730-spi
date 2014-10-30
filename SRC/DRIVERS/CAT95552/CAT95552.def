@@ -1,0 +1,15 @@
+;
+; Windows CE CAT9555
+
+LIBRARY CAT95552
+EXPORTS
+	CTA_Close
+	CTA_Deinit
+	CTA_Init
+	CTA_IOControl
+	CTA_Open
+	CTA_PowerDown
+	CTA_PowerUp
+	CTA_Read
+	CTA_Seek
+	CTA_Write

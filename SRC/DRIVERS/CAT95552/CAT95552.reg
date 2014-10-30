@@ -1,0 +1,6 @@
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\CTA]
+    "Dll" = "CAT95552.dll"
+    "Index" = dword:1
+    "Prefix" = "CTA"
+    "Order" = dword:11
+    "FriendlyName" = "CAT95552 Control"
