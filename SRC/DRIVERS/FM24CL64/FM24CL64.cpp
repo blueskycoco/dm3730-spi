@@ -26,7 +26,7 @@ BOOL Virtual_Alloc()
 	GPIOSetMode(hGpio, 158, GPIO_DIR_OUTPUT );
 	GPIOSetBit(hGpio, 162);
 	GPIOSetBit(hGpio, 158);
-	hSPI = SPIOpen("SPI2:");
+	hSPI = SPIOpen(L"SPI2:");
 	if (hSPI == NULL) 
 	{
 		RETAILMSG(1, (TEXT("ERROR: PddInitializeHardware: Failed open SPI device driver\r\n")));
@@ -101,6 +101,8 @@ BOOL WriteReg(UINT8* value,UINT8 size)
 		else
 			rc = TRUE;
 	}
+	
+	return rc;
 #else
 	if(hSPI)
 	{
@@ -110,9 +112,9 @@ BOOL WriteReg(UINT8* value,UINT8 size)
 		SPIWriteRead(hSPI, sizeof(UINT8)*(size+1), Local_buffer,Local_buffer);
 		free(Local_buffer);
 	}
+	return TRUE;
 #endif
-	return rc;
-}
+	}
 BOOL ReadReg(UINT8* data,UINT8 size)
 {
 #ifndef USE_25115A
@@ -125,6 +127,7 @@ BOOL ReadReg(UINT8* data,UINT8 size)
 		else
 			rc = TRUE;
 	}
+	return rc;
 #else
 	if(hSPI)
 	{
@@ -136,9 +139,9 @@ BOOL ReadReg(UINT8* data,UINT8 size)
 		memcpy(data,&(Local_buffer[3]),size);
 		free(Local_buffer);
 	}
-
+	return TRUE;
 #endif
-	return rc;
+	
 
 }
 

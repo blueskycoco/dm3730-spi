@@ -350,6 +350,8 @@ OEMInit(
 	ConfigurePadArray(BSPGetDevicePadInfo(OMAP_DEVICE_UART1));
     ConfigurePadArray(BSPGetDevicePadInfo(OMAP_DEVICE_HSOTGUSB));
 	ConfigurePadArray(BSPGetDevicePadInfo(OMAP_DEVICE_I2C2));
+	ConfigurePadArray(BSPGetDevicePadInfo(OMAP_DEVICE_MCBSP1));
+	ConfigurePadArray(BSPGetDevicePadInfo(OMAP_DEVICE_MCSPI2));
 
     //all other pads are to be requested (GPMC is never reserved by drivers, I2C is handled by the kernel)
     // GPIOs reservation may be split on per-GPIO basis and moved into the drivers that needs the GPIO. TBD
