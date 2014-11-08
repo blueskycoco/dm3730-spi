@@ -1,0 +1,15 @@
+;
+; Windows CE FM24CL64
+
+LIBRARY AT88SC
+EXPORTS
+	ATS_Close
+	ATS_Deinit
+	ATS_Init
+	ATS_IOControl
+	ATS_Open
+	ATS_PowerDown
+	ATS_PowerUp
+	ATS_Read
+	ATS_Seek
+	ATS_Write

@@ -1,0 +1,6 @@
+[HKEY_LOCAL_MACHINE\Drivers\BuiltIn\FMC]
+    "Dll" = "AT88SC.dll"
+    "Index" = dword:1
+    "Prefix" = "ATS"
+    "Order" = dword:9
+    "FriendlyName" = "AT88SC Control"
