@@ -1,9 +1,19 @@
 /*
  * brife: at88sc_config.h , config at88sc and lowlevel gpio control
  */ 
-#include <string.h>
-#ifndef BOOL
-#define BOOL rt_bool_t
+
+#include <windows.h>
+//#include <ceddk.h>
+#include <nkintr.h>
+#include <pm.h>
+#include "omap.h"
+#include "bsp_cfg.h"
+#include "soc_cfg.h"
+#include "sdk_i2c.h"
+#include <ceddkex.h>
+
+/*#ifndef BOOL
+#define BOOL int
 #endif
 #ifndef TRUE
 #define TRUE RT_TRUE
@@ -13,7 +23,7 @@
 #endif
 #ifndef NULL
 #define NULL RT_NULL
-#endif
+#endif*/
 #define AT88SC_ATR		0x00	//Answer To Reset
 #define AT88SC_FAB		0x08	//Fab Code
 #define AT88SC_MTZ		0x0a	//MTZ
@@ -81,11 +91,6 @@
 #define BYTES_MAX   	256
 #define DEFAULT_ADDRESS 0x0B
 #define debug 1
-#if debug
-#define AT88DBG	NKDbgPrintfW
-#else
-#define AT88DBG 
-#endif
 void i2c_init(void);
 void i2c_scl_set(unsigned char level);
 void i2c_sda_set(unsigned char level);
@@ -95,18 +100,15 @@ void i2c_sda_output(void);
 void sleep_ms(unsigned long n);
 typedef void (*callback_t)(void);
 typedef struct {
-	unsigned char user_zone[4][32];
-	unsigned char ar[4][2];
-	unsigned char ci[4][7];
-	unsigned char g[4][8];
-	unsigned char pw[8][7];
+	unsigned char New_SecureCode[7];
+	unsigned char ar[2];
+	unsigned char ci[7];
+	unsigned char g[8];
+	unsigned char pw[7];
 	unsigned char id[7];
 	unsigned char fuse;
-	unsigned char flag;//0 no need auth , 1 need auth
-	unsigned char auth_g[8];
-	unsigned char auth_pw[3];
+	unsigned char num_ar;
 }pe,*ppe;
-
 typedef struct {
 	unsigned char *user_zone;
 	unsigned char g[8];
@@ -118,6 +120,5 @@ typedef struct {
 	int addr;
 	int page_size;
 }ge,*pge;
-
-BOOL auth(pge p,callback_t cb);
-BOOL read_userzone(pge p);
+BOOL userzone_proc(pge p,BOOL read);
+BOOL get_config(unsigned char *buf);

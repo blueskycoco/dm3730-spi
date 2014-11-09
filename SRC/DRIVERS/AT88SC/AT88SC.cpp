@@ -2,15 +2,6 @@
 #include "ceddkex.h"
 #include "s1.h"
 #define debug 0
-#define DEVICE_TYPE_AT88SC0104C 0
-#define DEVICE_TYPE_AT88SC0204C 1
-#define DEVICE_TYPE_AT88SC0404C 2
-#define DEVICE_TYPE_AT88SC0808C 3
-#define DEVICE_TYPE_AT88SC1616C 4
-#define DEVICE_TYPE_AT88SC3216C 5
-#define DEVICE_TYPE_AT88SC6416C 6
-#define DEVICE_TYPE_AT88SC12816C 7
-#define DEVICE_TYPE_AT88SC25616C 8
 int one_page_max=0;//one page size
 int one_userzone_max=0;//one user zone size
 int userzone_num=0;//userzone num
@@ -38,54 +29,63 @@ BOOL Virtual_Alloc()
 			one_page_max=16;
 			one_userzone_max=32;
 			userzone_num=4;
+			RETAILMSG(1,(TEXT("at88sc0104c found\r\n")));
 		}
 		else if(memcmp(chip_info,chip_at88sc0204c,10)==0)
 		{
 			one_page_max=16;	
 			one_userzone_max=64;
 			userzone_num=4;
+			RETAILMSG(1,(TEXT("at88sc0204c found\r\n")));
 		}		
 		else if(memcmp(chip_info,chip_at88sc0404c,10)==0)
 		{
 			one_page_max=16;	
 			one_userzone_max=128;
 			userzone_num=4;
+			RETAILMSG(1,(TEXT("at88sc0404c found\r\n")));
 		}		
 		else if(memcmp(chip_info,chip_at88sc0808c,10)==0)
 		{
 			one_page_max=16;	
 			one_userzone_max=128;
 			userzone_num=8;
+			RETAILMSG(1,(TEXT("at88sc0808c found\r\n")));
 		}		
 		else if(memcmp(chip_info,chip_at88sc1616c,10)==0)
 		{
 			one_page_max=16;	
 			one_userzone_max=128;
 			userzone_num=16;
+			RETAILMSG(1,(TEXT("at88sc1616c found\r\n")));
 		}		
 		else if(memcmp(chip_info,chip_at88sc3216c,10)==0)
 		{
 			one_page_max=64;	
 			one_userzone_max=256;
 			userzone_num=16;
+			RETAILMSG(1,(TEXT("at88sc3216c found\r\n")));
 		}		
 		else if(memcmp(chip_info,chip_at88sc6416c,10)==0)
 		{
 			one_page_max=64;	
 			one_userzone_max=512;
 			userzone_num=16;
+			RETAILMSG(1,(TEXT("at88sc6416c found\r\n")));
 		}		
 		else if(memcmp(chip_info,chip_at88sc12816c,10)==0)
 		{
 			one_page_max=128;	
 			one_userzone_max=1024;
 			userzone_num=16;
+			RETAILMSG(1,(TEXT("at88sc12816c found\r\n")));
 		}		
 		else if(memcmp(chip_info,chip_at88sc25616c,10)==0)
 		{
 			one_page_max=128;	
 			one_userzone_max=2048;
 			userzone_num=16;
+			RETAILMSG(1,(TEXT("at88sc25616c found\r\n")));
 		}		
 		else
 		{
@@ -144,10 +144,12 @@ DWORD ATS_Init(DWORD dwContext)
 	RETAILMSG(1,(TEXT("[	AT88SC --]\r\n")));
 	return TRUE;
 }
+
+
 BOOL WriteReg(at88* value)
 {
 	BOOL rc = FALSE;
-	int index=0;
+	int index=0,local_size,local_addr;
 	ge param;
 	/*transfer addr to userzone 0 byte to 32768 byte*/
 	if((value->addr+value->size)>one_userzone_max*userzone_num)
@@ -158,27 +160,29 @@ BOOL WriteReg(at88* value)
 	memcpy(param.pw,value->pw,3);	
 	param.use_g=0;
 	param.use_pw=0;
-	param.page_size=one_page_max;
-	for(param.zone_index=user_zone_begin;param.zone_index<=user_zone_end;param.zone_index++)
+	param.page_size=one_page_max;	
+	local_size=value->size;
+	local_addr=value->addr;
+	for(param.zone_index=user_zone_begin;param.zone_index<user_zone_end;param.zone_index++)
 	{		
-		param.addr=value->addr%one_userzone_max;
-		if((param.addr+value->size)<=one_userzone_max)
-			param.len=value->size;
+		param.addr=local_addr%one_userzone_max;
+		if((param.addr+local_size)<=one_userzone_max)
+			param.len=local_size;
 		else
 			param.len=one_userzone_max-param.addr;
 			
 		//memcpy(param.user_zone,value->data+index,param.len);
 		param.user_zone=value->data+index;
-		userzone_proc(param,0);
-		value->size=value->size-param.len;		
-		value->addr=value->addr+param.len;
+		userzone_proc(&param,0);
+		local_size=local_size-param.len;		
+		local_addr=local_addr+param.len;
 		index=index+param.len;
 	}
 }
+
 BOOL ReadReg(at88* value)
 {
-	BOOL rc = FALSE;
-	int index=0;
+	int index=0,local_size,local_addr;
 	ge param;
 	/*transfer addr to userzone 0 byte to 32768 byte*/
 	if((value->addr+value->size)>one_userzone_max*userzone_num)
@@ -190,22 +194,27 @@ BOOL ReadReg(at88* value)
 	param.use_g=0;
 	param.use_pw=0;
 	param.page_size=one_page_max;
-	for(param.zone_index=user_zone_begin;param.zone_index<=user_zone_end;param.zone_index++)
+	local_size=value->size;
+	local_addr=value->addr;
+	for(param.zone_index=user_zone_begin;param.zone_index<user_zone_end;param.zone_index++)
 	{		
-		param.addr=value->addr%one_userzone_max;
-		if((param.addr+value->size)<=one_userzone_max)
-			param.len=value->size;
+		param.addr=local_addr%one_userzone_max;
+		if((param.addr+local_size)<=one_userzone_max)
+			param.len=local_size;
 		else
 			param.len=one_userzone_max-param.addr;
 			
 		//memcpy(param.user_zone,value->data+index,param.len);
 		param.user_zone=value->data+index;
-		userzone_proc(param,1);
-		value->size=value->size-param.len;		
-		value->addr=value->addr+param.len;
+		/*rt_kprintf("user_zone %x\r\ng %x %x %x %x %x %x %x %x\r\npw %x %x %x\r\npage_size %x\r\nzone_index %x\r\n",
+			param.user_zone,param.g[0],param.g[1],param.g[2],param.g[3],param.g[4],param.g[5],param.g[6],param.g[7],
+			param.pw[0],param.pw[1],param.pw[2],param.page_size,param.zone_index);*/
+		userzone_proc(&param,1);
+		local_size=local_size-param.len;		
+		local_addr=local_addr+param.len;
 		index=index+param.len;
 	}
-
+return TRUE;
 }
 
 //-----------------------------------------------------------------------------
@@ -222,7 +231,7 @@ BOOL ATS_IOControl(DWORD hOpenContext,
 	{
 		case IOCTL_AT88SC_WRITE:
 
-			WriteReg((at88 *)pBufOut,dwLenOut);
+			WriteReg((at88 *)pBufOut);
 
 			#if debug
 			RETAILMSG(1,(TEXT("\r\nWrite =\r\n")));
@@ -236,7 +245,7 @@ BOOL ATS_IOControl(DWORD hOpenContext,
 				#if debug
 				RETAILMSG(1,(TEXT("\r\nRead =\r\n")));
 				#endif
-				ReadReg((at88 *)pBufOut,dwLenOut);
+				ReadReg((at88 *)pBufOut);
 				//RETAILMSG(1,(TEXT("Read %x="),*(BYTE*)pBufIn));
 				#if debug
 				for(i=0;i<dwLenOut;i++)

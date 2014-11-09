@@ -18,11 +18,12 @@
     
 #define IOCTL_AT88SC_READ_ID       \
 	CTL_CODE(FILE_DEVICE_UNKNOWN, 0x0324, METHOD_BUFFERED, FILE_ANY_ACCESS)
-typedef struct {
-	UINT8 *data;
-	UINT8 g[8];
-	UINT8 pw[3];
-	UINT16 addr;
-	UINT16 size;
-}at88,*pat88;
 	
+typedef struct {
+	unsigned char *data;
+	unsigned char g[8];
+	unsigned char pw[3];
+	unsigned int addr;
+	unsigned int size;
+}at88,*pat88;
+

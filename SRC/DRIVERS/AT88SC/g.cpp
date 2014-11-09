@@ -47,7 +47,7 @@ void i2c_sda_set(unsigned char level)
 /*return sda level */
 unsigned char i2c_sda_get(void)
 {
-		return GPIOGetBit(hGpio,GPIO_SDA);
+		return (unsigned char)GPIOGetBit(hGpio,GPIO_SDA);
 }
 /*config sda dir input*/
 void i2c_sda_input(void)
@@ -67,7 +67,7 @@ void i2c_sda_output(void)
 /*sleep function*/
 void sleep_ms(unsigned long n)
 {
-	volatile long i,j;
+	volatile unsigned long i,j;
 	for(i=0;i<n;i++)
 	for(j=0;j<DELAY;j++)
 	;
