@@ -255,6 +255,25 @@ BOOL ATS_IOControl(DWORD hOpenContext,
 			}
 
 			break;
+			
+			case IOCTL_AT88SC_READ_ID:
+				if(pBufOut && dwLenOut>=sizeof(BYTE))
+				{
+		#if debug
+					RETAILMSG(1,(TEXT("\r\nRead ID=\r\n")));
+		#endif
+					for(i=0;i<8;i++)
+					*(BYTE *)pBufOut[i]=chip_info[16+i];
+					dwLenOut=8;
+					//RETAILMSG(1,(TEXT("Read %x="),*(BYTE*)pBufIn));
+		#if debug
+					for(i=0;i<dwLenOut;i++)
+						RETAILMSG(1,(TEXT("%x "),*(BYTE*)(pBufOut+i)));
+		#endif
+					if(pdwActualOut) *(int*)pdwActualOut=sizeof(BYTE)*dwLenOut;
+				}
+			
+				break;
 		default:
 			break;		
 	}
