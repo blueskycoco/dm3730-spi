@@ -8,8 +8,8 @@ HANDLE  hGpio;
 
  /*config scl,sda as gpio mode and dir out*/
  #define DELAY 10
- #define GPIO_SCL 156
- #define GPIO_SDA 157
+ #define GPIO_SCL 184
+ #define GPIO_SDA 185
  void i2c_init(void)
 {
 	 hGpio = GPIOOpen();
@@ -67,8 +67,9 @@ void i2c_sda_output(void)
 /*sleep function*/
 void sleep_ms(unsigned long n)
 {
-	volatile unsigned long i,j;
-	for(i=0;i<n;i++)
-	for(j=0;j<DELAY;j++)
-	;
+	//volatile unsigned long i,j;
+	//for(i=0;i<n;i++)
+	//for(j=0;j<DELAY;j++)
+	//;
+	Sleep(n);
 }

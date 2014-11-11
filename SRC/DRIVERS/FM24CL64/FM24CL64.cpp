@@ -39,7 +39,7 @@ BOOL Virtual_Alloc()
 	}
 	config =    MCSPI_PHA_ODD_EDGES |
 		MCSPI_POL_ACTIVEHIGH |
-		MCSPI_CHCONF_CLKD(11) |
+		MCSPI_CHCONF_CLKD(4) |
 		MCSPI_CSPOLARITY_ACTIVELOW |
 		MCSPI_CHCONF_WL(8) |
 		MCSPI_CHCONF_TRM_TXRX |
@@ -49,13 +49,13 @@ BOOL Virtual_Alloc()
 		RETAILMSG(1, (TEXT("ERROR: PddInitializeHardware: Failed configure SPI device driver\r\n")));
 		return FALSE;
 	}
-	#if debug
+	#if 1
 	//RETAILMSG(1,(TEXT("Use 25115A chip\r\n")));
 	SPILockController(hSPI,INFINITE);
 	SPIEnableChannel(hSPI);
 	SPIWriteRead(hSPI, sizeof(UINT8)*2, recv,send);
 	SPIDisableChannel(hSPI);
-	SPIUnlockController(hSPI);
+	//SPIUnlockController(hSPI);
 	RETAILMSG(1,(TEXT("get mode %x \r\n"),send[1]));
 	send[1]=0x00;
 	WriteReg(send,3);
@@ -63,6 +63,7 @@ BOOL Virtual_Alloc()
 	g_save_addr=0x0000;
 	recv[0]=0xff;
 	ReadReg((BYTE *)recv,1);
+	SPIUnlockController(hSPI);
 	RETAILMSG(1,(TEXT("get data %x \r\n"),recv[0]));
 	#endif
 #endif
@@ -137,11 +138,11 @@ BOOL WriteReg(UINT8* value,UINT8 size)
 		for(i=0;i<size+1;i++)
 			RETAILMSG(1,(TEXT("%x "),out_buffer[i]));
 		#endif
-		SPILockController(hSPI,INFINITE);
+		//SPILockController(hSPI,INFINITE);
 		SPIEnableChannel(hSPI);
 		SPIWriteRead(hSPI, sizeof(UINT8)*(size+1), out_buffer,in_buffer);
 		SPIDisableChannel(hSPI);
-		SPIUnlockController(hSPI);
+		//SPIUnlockController(hSPI);
 		free(in_buffer);
 		free(out_buffer);
 	}
@@ -176,11 +177,11 @@ BOOL ReadReg(UINT8* data,UINT8 size)
 		for(i=0;i<3;i++)
 			RETAILMSG(1,(TEXT("%x "),out_buffer[i]));
 		#endif
-		SPILockController(hSPI,INFINITE);
+		//SPILockController(hSPI,INFINITE);
 		SPIEnableChannel(hSPI);
 		SPIWriteRead(hSPI, sizeof(UINT8)*(size+3), out_buffer,in_buffer);
 		SPIDisableChannel(hSPI);
-		SPIUnlockController(hSPI);
+		//SPIUnlockController(hSPI);
 		#if debug
 		RETAILMSG(1,(TEXT("\r\nIN<\r\n")));
 		for(i=0;i<size+3;i++)
@@ -253,6 +254,12 @@ BOOL FMC_IOControl(DWORD hOpenContext,
 DWORD FMC_Open(DWORD hDeviceContext, DWORD AccessCode, DWORD ShareMode)
 {
 	//RETAILMSG(1,(TEXT("USERMUL: FMC_Open\r\n")));
+	static BOOL flag=FALSE;
+	if(flag==FALSE)
+	{
+		SPILockController(hSPI,INFINITE);
+		flag=TRUE;
+	}
 	return TRUE;
 } 
 

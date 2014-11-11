@@ -16,8 +16,8 @@ unsigned char chip_at88sc6416c[10]={0x3b,0xb3,0x11,0x00,0x00,0x00,0x00,0x64,0x64
 unsigned char chip_at88sc12816c[10]={0x3b,0xb3,0x11,0x00,0x00,0x00,0x01,0x28,0x28,0x60};
 unsigned char chip_at88sc25616c[10]={0x3b,0xb3,0x11,0x00,0x00,0x00,0x02,0x56,0x58,0x60};
 
-BOOL ReadReg(UINT8* data,UINT8 size);
-BOOL WriteReg(UINT8* value,UINT8 size);
+BOOL ReadReg(at88* data);
+BOOL WriteReg(at88* value);
 
 BOOL Virtual_Alloc()
 {
@@ -90,6 +90,13 @@ BOOL Virtual_Alloc()
 		else
 		{
 			RETAILMSG(1,(TEXT("UnKnown at88sc chip\r\n")));
+			int i;
+			for(i=0;i<24;i++)
+			{
+				if(i%8==0 && i!=0)
+					RETAILMSG(1,(TEXT("\n")));
+				RETAILMSG(1,(TEXT("%4X "),chip_info[i]));		
+			}
 			return FALSE;
 		}
 		
@@ -139,8 +146,33 @@ BOOL ATS_Deinit(DWORD hDeviceContext)
 } 
 DWORD ATS_Init(DWORD dwContext)
 {
+	int i;
 	RETAILMSG(1,(TEXT("[	AT88SC ++]\r\n")));
 	Virtual_Alloc();
+	at88 at88;	
+	at88.data=(unsigned char *)malloc(128);	
+	memset(at88.data,123,128);	
+	for(i=0;i<128;i++)		
+		at88.data[i]=i;	
+	for(i=0;i<3;i++)	
+		{		
+		at88.pw[i]=i;	
+		}	
+	for(i=0;i<8;i++)	
+		{		
+		at88.g[i]=i;	
+		}		
+	at88.addr=0;	
+	at88.size=128;	
+	ReadReg(&at88);		
+	RETAILMSG(1,(TEXT("\r\nRead user zone data again:\r\n")));
+	for(i=0;i<at88.size;i++)	
+		{		
+		if(i%8==0 && i!=0)			
+			RETAILMSG(1,(TEXT("\r\n")));		
+		RETAILMSG(1,(TEXT("%4X "),at88.data[i])); 		
+		}
+	free(at88.data);
 	RETAILMSG(1,(TEXT("[	AT88SC --]\r\n")));
 	return TRUE;
 }

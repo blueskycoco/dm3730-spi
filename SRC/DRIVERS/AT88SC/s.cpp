@@ -884,32 +884,32 @@ BOOL get_config(unsigned char *buf)
 	if (ucReturn != TRUE) 
 	{
 		//AT88DBG("cm_ReadConfigZone failed\n");
-		RETAILMSG(1,(TEXT("cm_ReadConfigZone failed\n")));
+		RETAILMSG(1,(TEXT("cm_ReadConfigZone failed\r\n")));
 		return FALSE;
 	}
-	#if 0
+	#if 1
 	cm_ReadFuse(DEFAULT_ADDRESS,&fuse);
-	//AT88DBG("fuse , %x",fuse);	
+	RETAILMSG(1,(TEXT("fuse , %x\r\n"),fuse));	
 	/*unlock config area*/
 	ucReturn = cm_VerifyPassword(DEFAULT_ADDRESS, Def_SecureCode,7, 0);
 	if (ucReturn != TRUE)  
 	{
-		//AT88DBG("cm_VerifyPassword failed\n");
+		RETAILMSG(1,(TEXT("cm_VerifyPassword failed\r\n")));
 		return FALSE;
 	}
 
 	ucReturn = cm_ReadConfigZone(DEFAULT_ADDRESS, AT88SC_ATR, ucData, 0xf0);
 	if (ucReturn != TRUE) 
 	{
-		//AT88DBG("cm_ReadConfigZone failed\n");
+		RETAILMSG(1,(TEXT("cm_ReadConfigZone failed\r\n")));
 		return FALSE;
 	}
-	//AT88DBG("\nRead all config data again:\n");
+	RETAILMSG(1,(TEXT("\r\nRead all config data again:\r\n")));
 	for(i=0;i<0xf0;i++)
 	{
 		if(i%8==0 && i!=0)
-			//AT88DBG("\n");
-		//AT88DBG("%4X ",ucData[i]);		
+			RETAILMSG(1,(TEXT("\r\n")));
+		RETAILMSG(1,(TEXT("%4X "),ucData[i]));		
 	}
 	#endif
 	return ucReturn;
@@ -1056,14 +1056,14 @@ BOOL userzone_proc(pge p,BOOL read)
 	if (ucReturn != TRUE)
 	{
 		//AT88DBG("cm_VerifyCrypto failed1\n");
-		RETAILMSG(debug,(TEXT("cm_VerifyCrypto failed1\n")));
+		RETAILMSG(debug,(TEXT("cm_VerifyCrypto failed1\r\n")));
 		return FALSE;
 	}
 	ucReturn = cm_VerifyPassword(DEFAULT_ADDRESS, p->pw,p->use_pw, 0);
 	if (ucReturn != TRUE)  
 	{
 		//AT88DBG("cm_VerifyPassword failed\n");
-		RETAILMSG(debug,(TEXT("cm_VerifyPassword failed\n")));
+		RETAILMSG(debug,(TEXT("cm_VerifyPassword failed\r\n")));
 		return FALSE;
 	}
 	
@@ -1074,7 +1074,7 @@ BOOL userzone_proc(pge p,BOOL read)
 		if (ucReturn != TRUE)
 		{
 		//AT88DBG("cm_ReadUserZone failed %d\n",p->zone_index);
-		RETAILMSG(debug,(TEXT("cm_ReadUserZone failed %d\n",p->zone_index)));
+		RETAILMSG(debug,(TEXT("cm_ReadUserZone failed %d\r\n"),p->zone_index));
 		return FALSE;
 		}
 	}
@@ -1086,7 +1086,7 @@ BOOL userzone_proc(pge p,BOOL read)
 			if(ucReturn != TRUE)
 			{
 				//AT88DBG("cm_WriteUserZone Zone failed 1\n");
-				RETAILMSG(debug,(TEXT("cm_WriteUserZone Zone failed 1\n")));
+				RETAILMSG(debug,(TEXT("cm_WriteUserZone Zone failed 1\r\n")));
 				return FALSE;
 			}
 			index=index+p->page_size;
@@ -1097,7 +1097,7 @@ BOOL userzone_proc(pge p,BOOL read)
 			if(ucReturn != TRUE)
 			{
 				//AT88DBG("cm_WriteUserZone Zone failed 2\n");
-				RETAILMSG(debug,(TEXT("cm_WriteUserZone Zone failed 2\n")));
+				RETAILMSG(debug,(TEXT("cm_WriteUserZone Zone failed 2\r\n")));
 				return FALSE;
 			}
 		}
