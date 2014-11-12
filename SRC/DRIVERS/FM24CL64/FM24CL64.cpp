@@ -43,8 +43,7 @@ BOOL Virtual_Alloc()
 		MCSPI_CSPOLARITY_ACTIVELOW |
 		MCSPI_CHCONF_WL(8) |
 		MCSPI_CHCONF_TRM_TXRX |
-		MCSPI_CHCONF_DPE0
-		/*MCSPI_CHCONF_DMAR_ENABLE|MCSPI_CHCONF_DMAW_ENABLE*/;
+		MCSPI_CHCONF_DPE0;
 	if (!SPIConfigure(hSPI, 0, config))
 	{
 		RETAILMSG(1, (TEXT("ERROR: PddInitializeHardware: Failed configure SPI device driver\r\n")));
@@ -52,11 +51,11 @@ BOOL Virtual_Alloc()
 	}
 	#if 1
 	//RETAILMSG(1,(TEXT("Use 25115A chip\r\n")));
-	SPILockController(hSPI,INFINITE);
-	SPIEnableChannel(hSPI);
+	//SPILockController(hSPI,INFINITE);
+	//SPIEnableChannel(hSPI);
 	SPIWriteRead(hSPI, sizeof(UINT8)*2, recv,send);
-	SPIDisableChannel(hSPI);
-	SPIUnlockController(hSPI);
+	//SPIDisableChannel(hSPI);
+	//SPIUnlockController(hSPI);
 	RETAILMSG(1,(TEXT("get mode %x \r\n"),send[1]));
 	send[1]=0x00;
 	WriteReg(send,3);
@@ -139,12 +138,12 @@ BOOL WriteReg(UINT8* value,UINT8 size)
 		for(i=0;i<size+1;i++)
 			RETAILMSG(1,(TEXT("%x "),out_buffer[i]));
 		#endif
-		SPILockController(hSPI,INFINITE);
-		SPIEnableChannel(hSPI);
+		//SPILockController(hSPI,INFINITE);
+		//SPIEnableChannel(hSPI);
 		SPIWriteRead(hSPI, sizeof(UINT8)*(size+1), out_buffer,in_buffer);
 		//SPIAsyncWriteRead(hSPI,sizeof(UINT8)*(size+1),out_buffer,in_buffer);
-		SPIDisableChannel(hSPI);
-		SPIUnlockController(hSPI);
+		//SPIDisableChannel(hSPI);
+		//SPIUnlockController(hSPI);
 		free(in_buffer);
 		free(out_buffer);
 	}
@@ -180,14 +179,14 @@ BOOL ReadReg(UINT8* data,UINT8 size)
 		for(i=0;i<3;i++)
 			RETAILMSG(1,(TEXT("%x "),out_buffer[i]));
 		#endif
-		SPILockController(hSPI,INFINITE);
-		SPIEnableChannel(hSPI);
+		//SPILockController(hSPI,INFINITE);
+		//SPIEnableChannel(hSPI);
 		SPIWriteRead(hSPI, sizeof(UINT8)*(size+3), out_buffer,in_buffer);
 		//count=SPIAsyncWriteRead(hSPI,sizeof(UINT8)*(size+3),out_buffer,in_buffer);
 		//if(count!=0)
 		//	count=SPIWaitForAsyncWriteReadComplet(hSPI,sizeof(UINT8)*(size+3),in_buffer);
-		SPIDisableChannel(hSPI);
-		SPIUnlockController(hSPI);
+		//SPIDisableChannel(hSPI);
+		//SPIUnlockController(hSPI);
 		#if debug
 		RETAILMSG(1,(TEXT("\r\nIN<\r\n")));
 		for(i=0;i<size+3;i++)
